@@ -36,7 +36,7 @@ module JitPreloadExtension
       end
 
       preloader_association = ActiveRecord::Associations::Preloader.new(
-        records: records,
+        records:,
         associations: base_association,
         scope: preload_scope
       ).call.first

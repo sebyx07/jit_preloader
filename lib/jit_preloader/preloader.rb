@@ -21,7 +21,7 @@ module JitPreloader
         # Some of the records may already have the association loaded and we should not load them again
         records_requiring_loading = records_with_association.select { |r| !r.association(associations).loaded? }
 
-        self.class.new(records: records_requiring_loading, associations: associations).call
+        self.class.new(records: records_requiring_loading, associations:).call
       end
     else
       def self.attach(records)

@@ -14,7 +14,7 @@ RSpec.describe JitPreloader::Preloader do
       PhoneNumber.new(phone: '4445556666'),
       PhoneNumber.new(phone: '2223333444')
     ]
-    Contact.create(name: 'Only Addresses', addresses: addresses, phone_numbers: phones)
+    Contact.create(name: 'Only Addresses', addresses:, phone_numbers: phones)
   end
 
   let!(:contact2) do
@@ -28,7 +28,7 @@ RSpec.describe JitPreloader::Preloader do
     ]
     Contact.create(
       name: 'Both!',
-      addresses: addresses,
+      addresses:,
       email_address: EmailAddress.new(address: 'woot@woot.com'),
       phone_numbers: [PhoneNumber.new(phone: '1234567890')]
     )
@@ -54,8 +54,8 @@ RSpec.describe JitPreloader::Preloader do
   context 'for single table inheritance' do
     context 'when preloading an aggregate for a child model' do
       let!(:contact_book) { ContactBook.create(name: 'The Yellow Pages') }
-      let!(:company1) { Company.create(name: 'Company1', contact_book: contact_book) }
-      let!(:company2) { Company.create(name: 'Company2', contact_book: contact_book) }
+      let!(:company1) { Company.create(name: 'Company1', contact_book:) }
+      let!(:company2) { Company.create(name: 'Company2', contact_book:) }
 
       it 'can handle queries' do
         contact_books = ContactBook.jit_preload.to_a
@@ -65,11 +65,11 @@ RSpec.describe JitPreloader::Preloader do
 
     context 'when preloading an aggregate of a child model through its base model' do
       let!(:contact_book) { ContactBook.create(name: 'The Yellow Pages') }
-      let!(:contact) { Contact.create(name: 'Contact', contact_book: contact_book) }
-      let!(:company1) { Company.create(name: 'Company1', contact_book: contact_book) }
-      let!(:company2) { Company.create(name: 'Company2', contact_book: contact_book) }
-      let!(:contact_employee1) { Employee.create(name: 'Contact Employee1', contact: contact) }
-      let!(:contact_employee2) { Employee.create(name: 'Contact Employee2', contact: contact) }
+      let!(:contact) { Contact.create(name: 'Contact', contact_book:) }
+      let!(:company1) { Company.create(name: 'Company1', contact_book:) }
+      let!(:company2) { Company.create(name: 'Company2', contact_book:) }
+      let!(:contact_employee1) { Employee.create(name: 'Contact Employee1', contact:) }
+      let!(:contact_employee2) { Employee.create(name: 'Contact Employee2', contact:) }
       let!(:company_employee1) { Employee.create(name: 'Company Employee1', contact: company1) }
       let!(:company_employee2) { Employee.create(name: 'Company Employee2', contact: company2) }
 
@@ -81,11 +81,11 @@ RSpec.describe JitPreloader::Preloader do
 
     context 'when preloading an aggregate of a nested child model through another child model' do
       let!(:contact_book) { ContactBook.create(name: 'The Yellow Pages') }
-      let!(:contact) { Contact.create(name: 'Contact', contact_book: contact_book) }
-      let!(:company1) { Company.create(name: 'Company1', contact_book: contact_book) }
-      let!(:company2) { Company.create(name: 'Company2', contact_book: contact_book) }
-      let!(:contact_employee1) { Employee.create(name: 'Contact Employee1', contact: contact) }
-      let!(:contact_employee2) { Employee.create(name: 'Contact Employee2', contact: contact) }
+      let!(:contact) { Contact.create(name: 'Contact', contact_book:) }
+      let!(:company1) { Company.create(name: 'Company1', contact_book:) }
+      let!(:company2) { Company.create(name: 'Company2', contact_book:) }
+      let!(:contact_employee1) { Employee.create(name: 'Contact Employee1', contact:) }
+      let!(:contact_employee2) { Employee.create(name: 'Contact Employee2', contact:) }
       let!(:company_employee1) { Employee.create(name: 'Company Employee1', contact: company1) }
       let!(:company_employee2) { Employee.create(name: 'Company Employee2', contact: company2) }
 
@@ -100,8 +100,8 @@ RSpec.describe JitPreloader::Preloader do
       let!(:child1) { Child.create(name: 'Child1') }
       let!(:child2) { Child.create(name: 'Child2') }
       let!(:child3) { Child.create(name: 'Child3') }
-      let!(:parent1) { Parent.create(name: 'Parent1', contact_book: contact_book, children: [child1, child2]) }
-      let!(:parent2) { Parent.create(name: 'Parent2', contact_book: contact_book, children: [child2, child3]) }
+      let!(:parent1) { Parent.create(name: 'Parent1', contact_book:, children: [child1, child2]) }
+      let!(:parent2) { Parent.create(name: 'Parent2', contact_book:, children: [child2, child3]) }
 
       it 'can handle queries' do
         contact_books = ContactBook.jit_preload.to_a
@@ -112,9 +112,9 @@ RSpec.describe JitPreloader::Preloader do
 
     context 'when preloading an aggregate for a child model scoped by another join table' do
       let!(:contact_book) { ContactBook.create(name: 'The Yellow Pages') }
-      let!(:contact1) { Company.create(name: 'Without Email', contact_book: contact_book) }
-      let!(:contact2) { Company.create(name: 'With Blank Email', email_address: EmailAddress.new(address: ''), contact_book: contact_book) }
-      let!(:contact3) { Company.create(name: 'With Email', email_address: EmailAddress.new(address: 'a@a.com'), contact_book: contact_book) }
+      let!(:contact1) { Company.create(name: 'Without Email', contact_book:) }
+      let!(:contact2) { Company.create(name: 'With Blank Email', email_address: EmailAddress.new(address: ''), contact_book:) }
+      let!(:contact3) { Company.create(name: 'With Email', email_address: EmailAddress.new(address: 'a@a.com'), contact_book:) }
 
       it 'can handle queries' do
         contact_books = ContactBook.jit_preload.to_a
@@ -230,8 +230,8 @@ RSpec.describe JitPreloader::Preloader do
 
   context 'when accessing an association with a scope that has a parameter' do
     let!(:contact_book) { ContactBook.create(name: 'The Yellow Pages') }
-    let!(:contact) { Contact.create(name: 'Contact', contact_book: contact_book) }
-    let!(:company1) { Company.create(name: 'Company1', contact_book: contact_book) }
+    let!(:contact) { Contact.create(name: 'Contact', contact_book:) }
+    let!(:company1) { Company.create(name: 'Company1', contact_book:) }
 
     it 'is unable to be preloaded' do
       ActiveSupport::Notifications.subscribed(callback, 'n_plus_one_query') do

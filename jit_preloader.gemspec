@@ -15,8 +15,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/clio/jit_preloader'
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = spec.homepage
+  spec.required_ruby_version = '>= 3.0.0'
 
-  spec.license       = 'MIT'
+  spec.license = 'MIT'
 
   spec.files = Dir.glob('lib/**/*.rb') + [File.basename(__FILE__)]
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
